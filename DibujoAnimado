@@ -1,0 +1,91 @@
+//Práctica:Crear objetos y usar sus métodos, para hacer un dibujo animado
+
+//Código de la clase con la operación main
+
+/** 
+* Esta clase representará la imagen de un edificio y una bola cayendo desde lo alto del mismo
+*/ 
+
+public class Edificio {  
+
+public static void main(String[] args)    {  
+Imagen casa=new Imagen(400,1,"edificio.jpg");
+//imagen del edificio y sus coordenadas     
+Circulo cir=new Circulo(420,40,10); //objeto circulo, sus coordenadas y su radio de 15 px    
+Figura.espera(1000); //tiempo de espera de 1 segundo       
+cir.mueve(-52,0);// la bola se desplaza 52 px hacia la izquierda       
+Figura.espera(200);// se espera 0.2 segundos
+             double i=0; // creamos un bucle “while” para que repita el mov. de caída 9 veces            
+             while (i<9) {        
+             cir.mueve(0,70);             
+             Figura.espera(200);          
+             i=i+1;        
+             }           
+             Imagen boom=new Imagen(345,629,"boom.png"); //se representa la imagen boom en el lugar donde cayó la bola  
+             }
+}
+
+//Código de la clase con la operación main
+/** 
+*Programa que muestra un monigote cayendo. A esta clase la he llamado Building
+*/ 
+
+public class Building {    
+
+public static void main(String [] args) {  
+Imagen edificio=new Imagen(400,20, "edificio.jpg");//imagen del edificio
+
+         Monigote probador=new Monigote(400,110);//el monigote en las coordenadas       
+         int i=0; //introducimos un bucle while para que el monigote salte del edificio      
+         while (i<2)   
+         {        
+         probador.mueve(-7,-4);        
+         Figura.espera(10);        
+         i=1+i;      
+         }      
+         int n=0;// creamos otro bucle “while” para que caiga    
+         while (n<58)    
+         {          
+         hombre.mueve(0,10);     
+         Figura.espera(2);      
+         n=1+n;     
+         }
+    } 
+    }
+    
+//Código de la clase Monigote
+/** 
+*Programa que crea el monigote 
+*/ 
+public class Monigote {    
+Circulo head;//cabeza con forma de circulo 
+Linea body;//cuerpo, es una linea   
+Linea arms;//los brazos son una linea   
+Linea dcha;//la pierna derecha es una linea    
+Linea izda;//la pierna izquierda es una linea
+
+    /**   
+    * Construimos el monigote en función del pie izquierdo al que tomamos como punto de referencia (izda)   
+    */    
+    
+    public Monigote(int x, int y) {    
+    head=new Circulo(x+20,y-25-35-15,15);//la cabeza es un objeto de la clase circulo  
+    body=new Linea(x+20,y-27,x+20,y-27-35);//linea vertical, objeto de la clase linea  
+    arms=new Linea(x,y-45,x+40,y-45);//linea horizontal, objeto clase linea      
+    dcha=new Linea(x+20,y-25,x+40,y);//diagonal de pendiente -, objeto de la clase linea  
+    izda=new Linea(x,y,x+20,y-25);//diagonal de pendiente +, objeto de la clase linea   
+    }
+    
+    /**   
+    * Clase mueve() que desplaza al muñeco una cantidad de pixeles  
+    *   
+    */   
+    
+    public void mueve(int deltaX, int deltaY)    {  
+    head.mueve(deltaX, deltaY);//cabeza      
+    body.mueve(deltaX, deltaY);//cuerpo      
+    arms.mueve(deltaX, deltaY);//brazos     
+    dcha.mueve(deltaX, deltaY);//pierna derecha  
+    izda.mueve(deltaX, deltaY);//pierna izquierda      
+    }
+    }
