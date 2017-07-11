@@ -1,0 +1,145 @@
+//Práctica: Gestión de una plantación de árboles  
+  
+//Código Java de la clase Plantacion  
+    /**     
+    * Pinta todos los arboles de la plantacion cada uno en su color (ColorFig)   
+    * Roble : rojo     
+    * Haya  : verde     
+    * Abedul: gris      
+    */  
+    
+    public void muestra ()       {    
+    // borramos y ponemos el fondo de blanco   
+    d.borra(ColorFig.blanco);             
+    //recorremos el ArrayList p     
+    for (Arbol i:p){            
+    if(i.tipoArbol().equals("Abedul")){ //si es un abedul lo pintamos de rojo    
+    i.muestra(d, ColorFig.rojo);          
+    }else if (i.tipoArbol().equals("Haya")){ //si es un haya, de verde      
+    i.muestra(d, ColorFig.verde);          
+    }else if (i.tipoArbol().equals("Roble")){ //y si es un roble, de gris   
+    i.muestra(d, ColorFig.gris);                 
+    }      
+    }     
+    //pintamos el dibujo y esperamos        
+    d.pinta();     
+    d.espera();  
+    
+    } 
+ 
+    /**   
+    * Marca los primeros num arboles del tipo especificado. Si no hubiera suficientes  
+    * los marcaria todos. El marcado se hace en negro.  
+    * @param num número de arboles a marcar    
+    * @param tipo especie a marcar     
+    */    
+    
+    public void marca (int num, String tipo)     {    
+    // Código del método traducido del pseudocódigo     
+    int n=0; //contador inicializado en 0     
+    for(Arbol i:p){         
+    if (i.tipoArbol().equals(tipo)){ //si encuentra el tipo de árbol indicado, lo rodea de negro.        
+    i.marca(d, ColorFig.negro);            
+    n++; //y seguimos contando          
+    }          
+    if(n==num){ //si el contador se iguala al parámetro num, cerramos el bucle     
+    
+    break;          
+    }      
+    }       
+    //esperamos   
+    d.espera();   
+    }  
+    
+    /**    
+    * Marca el primer arbol del tipo especificado que esta a una distancia menor a la  
+    * especificada de las coordenadas dadas   
+    * El marcado se hara en color naranja y si no se encuentra un arbol se escribira   
+    * en la consola el mensaje "No encontrado"      
+    * @param tipo especie a marcar    
+    * @param dist distancia a la que se busca en metros  
+    * @param x coordenada x del punto en metros   
+    * @param y coordenada y del punto en metros   
+    */ 
+ 
+    public void marcaPrimero (String tipo, double dist, double x, double y)     {     
+    // Código del método      
+    boolean encontrado=false; //introducimos una variable booleana      
+    for (Arbol i:p){        
+    //si es del tipo indicado y distancia menor a dist   
+    if(i.tipoArbol().equals(tipo)&&i.distancia(x,y)<dist){        
+    i.marca(d, ColorFig.naranja); //marcamos el primer árbol encontrado         
+    encontrado=true; //y convertimos encontrado en true               
+    break; //cerramos el bucle, pues solo nos interesaba el primero encontrado  
+    }     
+    }    
+    d.espera();       
+    if(encontrado){ //si no lo hemos encontrado, la variable es false     
+    System.out.println("No encontrado"); //pintamos en pantalla el mensaje    
+    } 
+    } 
+    
+//Código Java de la clase que contiene el programa principal de prueba
+
+/**
+* Clase principal  
+*  
+* @author (Carmen García Bermejo) 
+* @version (11.05.15)  
+*/ 
+
+public class Principal { 
+public static void main (String args[]){     
+Plantacion p1=new Plantacion(100,30, 6.6); //creamos la primera plantación     
+Plantacion p2=new Plantacion(90,80, 4.7); //creamos la segunda   
+//invocamos los métodos            
+p1.muestra();     
+p1.marca(20, "Haya"); 
+p2.muestra();   
+p2.marca(34, "Roble"); 
+p2.marcaPrimero("Abedul", 9.5, 60, 70);     
+p2.marcaPrimero("Haya", 7.0, 35.2, 25.8);  
+} 
+}  
+  
+//Parte avanzada: código Java correspondiente al método marcaDistantes y a las instrucciones añadidas al programa  principal 
+
+//Método que marca los dos árboles más distantes  
+
+  public void marcaDistantes (String tipo)     {   
+  double max=0; //dos contadores que buscan     
+  double val=0;        
+  Arbol largo=null; //inicialmente nulos     
+  Arbol largo2=null;       
+  // Introducir aqui el codigo del metodo   
+  for (Arbol i:p){          
+  for(Arbol j:p){  //buscamos el máximo   
+  if(i.tipoArbol().equals(tipo)&&j.tipoArbol().equals(tipo)){ 
+  if(max<i.distancia(j)){    
+  max=i.distancia(j);                    
+  largo=i;                      
+  largo2=j;                   
+  }               
+  }            
+  }        
+  } 
+  //una vez encontrado el máximo, pintamos       
+  
+  if(largo.tipoArbol().equals("Abedul")){     
+  largo.muestra(d, ColorFig.rojo);           
+  largo2.muestra(d, ColorFig.rojo);          
+  }else if (largo.tipoArbol().equals("Haya")){  
+  largo.muestra(d, ColorFig.verde);                
+  largo2.muestra(d, ColorFig.rojo);        
+  }else if (largo.tipoArbol().equals("Roble")){    
+  largo.muestra(d, ColorFig.gris);                    
+  largo2.muestra(d, ColorFig.rojo);       
+  }           
+  d.espera();   
+  }   
+  }
+  
+  ** EN LA PRINCIPAL **    
+  p2.marcaDistantes("Robles");    
+  p2.marcaDistantes("Hayas");    
+  p2.marcaDistantes("Abedules"); 
