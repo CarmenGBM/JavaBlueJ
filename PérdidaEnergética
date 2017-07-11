@@ -1,0 +1,149 @@
+%Práctica: Cálculo de pérdida energética de una construcción  
+   
+//Código Java de la clase Construccion (excepto graficaCosteDiario) 
+import fundamentos.*; 
+/**  
+* Clase Construccion que permite evaluar la pérdida de energía que sufre una construcción en   
+* función de sus dimensiones y de la diferencia de temperatura interior/exterior, así como evaluar  
+* los límites de un sistema de calefacción para una construcción dada y su coste.  
+*
+* @author Carmen  
+* @version 27/04/15 
+*/
+
+public class Construccion {  
+private double U; 
+//valor de la transmitancia térmica de los muros y de la cubierta en W/m2C  
+
+private double superficie; 
+
+//superficie de contacto con el exterior de la construcción en m2 
+
+private double potenciaCale;
+
+//potencia del conjunto de radiadores que dan calor al interior en kW  
+
+    /**   
+    * Constructor para objetos de la clase Construccion     
+    */    
+    
+    public Construccion(double U, double superficie, double potenciaCale)     { 
+    
+    //copia los parámetros en los atributos correspondientes       
+    this.U=U;       
+    this.superficie=superficie;    
+    this.potenciaCale=potenciaCale;   
+    }  
+ 
+    /**     
+    * método que retorna el calor disipado en kW     
+    *   
+    * @param  tempInt y tempExt, ambos son reales    
+    * @return     calor disipado en kW      
+    */     
+    
+    public double calorDisipado(double tempInt, double tempExt)     {
+    //definimos q, que es el flujo de calor en un muro     
+    double q=U*0.001*(tempInt-tempExt); //multiplicamos por 0.001 para pasar a kW      
+    //retorna el calor disipado en kW
+    return q*superficie;     
+    } 
+    
+    /**   
+    * método que retorna la temperatura máxima interior en ºC   
+    *     
+    * @param  tempInt y tempExt, ambos son reales  
+    * @return     calor disipado en kW       
+    */    
+    
+    public double tempMaxInt(double tempExt){     
+    double temp=tempExt; //definimos temp       
+    
+    while (calorDisipado(temp, tempExt)<=potenciaCale){
+    //mientras se cumpla 
+    temp+=1; //se va añadiendo cada vez 1ºC       
+    }       
+        return temp-1; //devuelve temp-1  
+    }   
+    
+    /**     
+    * método que pinta la gráfica del calor disipado     
+    * @param  reales tempInt, tempFin, temExt    
+    * método void    
+    */     
+    
+    public void graficaCalorDisipado(double tempIni,double tempFin, double tempExt){      
+    //creamos el objeto de la clase grafica       
+    Grafica g=new Grafica("Calor disipado","temperatura/ºC","disipado/kW"); 
+ 
+        for (double temp=tempIni; temp<=tempFin; temp++){      
+        if (temp>=tempMaxInt(tempExt)){ //si temp supera a la máxima temperatura interior    
+        g.inserta(temp, calorDisipado(tempMaxInt(tempExt),tempExt)); // recta horizontal      
+        }else{ //si no           
+        g.inserta(temp,calorDisipado(temp, tempExt)); //recta con temp vs calor disipado     
+        }       
+        } //lo pintamos   
+        g.pinta();           
+        } 
+//Código Java de la clase que contiene el programa principal de prueba
+
+/**  
+*Clase principal que pinta la gráfica e indica la temperatura máxima interior de cada edificio 
+*  
+* @author Carmen  
+* @version 27/04/15 
+*/
+
+public class Principal {  
+public static void main(String[] args){    
+
+//creamos los objetos de la clase construccion, que son edificios    
+Construccion ed1=new Construccion(0.72,256,5.5);      
+Construccion ed2=new Construccion(0.6,256,5.5);        
+Construccion ed3=new Construccion(0.51,256,5.5);     
+//pintamos en pantalla las temperaturas máximas alcanzadas en el interior   
+System.out.println("La temperatura máxima alcanzable para:"   
++"\nel edificio1 es de "+ed1.tempMaxInt(-10)+" ºC"+    
+"\nel edificio2 es de "+ed2.tempMaxInt(-10)+" ºC"+     
+"\nel edificio3 es de "+ed3.tempMaxInt(-10)+" ºC");   
+
+//invocamos al método graficaCalorDisipado, para que nos pinte la gráfica correspondiente al primer edificio, el que va con menor espesor en el aislamiento    
+ed1.graficaCalorDisipado(10,25,-10);     
+} 
+}  
+ 
+    
+//Parte avanzada: código Java correspondiente al método graficaCosteDiario y al programa  principal extendido
+
+/** 
+  * método que pinta la gráfica del calor disipado     
+  *      
+  * @param  reales tempInt, temExt, precioEconomico, precioNormal     
+  * método void      
+  */ 
+  
+  public void graficaCosteDiario(double tempIni, double tempExt,double precioEconomico, double precioNormal){     
+  //creamos el objeto de la clase grafica         
+  Grafica g=new Grafica("Gasto económico diario","temperatura/ºC","coste diario/€");      
+  //creamos un bucle que va desde tempIni hasta temp. máxima interior     
+  for (double temp=tempIni; temp<=tempMaxInt(tempExt); temp++){    
+  //insertamos la fórmula para el costediario           
+  double costediario=calorDisipado(temp, tempExt)*(precioEconomico*12+precioNormal*12); 
+  //insertamos los puntos de la gráfica         
+  g.inserta(temp,costediario);          
+  } 
+  //pintamos 
+  g.pinta();    
+  }
+  } 
+  
+  ------PARTE AVANZADA, SE AÑADE LO SIGUIENTE AL MÉTODO PRINCIPAL----- 
+  
+  public class Principal {     public static void main(String[] args){    
+  
+  ……… //(código anterior) //invocamos el método graficaCosteDiario para que pinte la gráfica correspondiente a cada edificio     
+  ed1.graficaCosteDiario(10,4,0.07,0.17);       
+  ed2.graficaCosteDiario(10,4,0.07,0.17);    
+  ed3.graficaCosteDiario(10,4,0.07,0.17);     
+  } 
+  }
